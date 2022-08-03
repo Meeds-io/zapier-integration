@@ -1,0 +1,15 @@
+{
+  "name": "meeds-zapier-integration",
+  "version": "1.0.0",
+  "description": "Zapier Triggers and actions for Meeds.io software.",
+  "repository": "Meeds-io/zapier-integration",
+  "homepage": "https://meeds.io",
+  "author": "Meeds Association <contact@meeds.io>",
+  "license": "LGPLv3",
+  "main": "index.js",
+  "dependencies": {
+    "zapier-platform-core": "8.0.1"
+  },
+  "devDependencies": {
+  }
+}
