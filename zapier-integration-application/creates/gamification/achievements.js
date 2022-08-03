@@ -36,9 +36,9 @@ const gamify = (z, bundle) => {
 
 module.exports = {
   key: 'gamification',
-  noun: 'Gamify',
+  noun: 'Gamification Achievement',
   display: {
-    label: 'Gamify Action',
+    label: 'Gamify Achievement',
     description: 'Gamify user action to earn Meeds Token rewarding.'
   },
   operation: {
