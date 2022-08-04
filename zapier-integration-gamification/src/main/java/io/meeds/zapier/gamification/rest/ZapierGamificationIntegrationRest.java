@@ -23,12 +23,16 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.exoplatform.addons.gamification.service.configuration.RuleService;
 import org.exoplatform.addons.gamification.service.dto.configuration.RuleDTO;
+import org.exoplatform.commons.exception.ObjectNotFoundException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.resources.ResourceBundleService;
@@ -36,13 +40,12 @@ import org.exoplatform.services.rest.resource.ResourceContainer;
 import org.exoplatform.services.security.ConversationState;
 
 import io.meeds.zapier.gamification.model.GamificationAction;
+import io.meeds.zapier.gamification.model.GamificationAnnouncement;
 import io.meeds.zapier.gamification.model.GamificationRule;
 import io.meeds.zapier.gamification.rest.utils.EntityBuilder;
 import io.meeds.zapier.gamification.service.ZapierIntegrationService;
-import io.swagger.annotations.Api;
 
 @Path("/zapier/gamification")
-@Api(value = "/zapier/gamification", description = "Manage Zapier Integration with Gamification") // NOSONAR
 public class ZapierGamificationIntegrationRest implements ResourceContainer {
 
   private static final Log         LOG = ExoLogger.getLogger(ZapierGamificationIntegrationRest.class);
@@ -94,6 +97,25 @@ public class ZapierGamificationIntegrationRest implements ResourceContainer {
                                                .map(rule -> EntityBuilder.toGamificationRuleAction(resourceBundleService, rule))
                                                .collect(Collectors.toList());
     return Response.ok(ruleEntities).build();
+  }
+
+  @GET
+  @Path("challenges/{id}/announcements")
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed("zapier")
+  public Response getAnnouncements(
+                                   @PathParam("id")
+                                   int challengeId,
+                                   @QueryParam("offset")
+                                   int offset,
+                                   @QueryParam("limit")
+                                   int limit) {
+    try {
+      List<GamificationAnnouncement> announcements = zapierIntegrationService.getAnnouncements(challengeId, offset, limit);
+      return Response.ok(announcements).build();
+    } catch (IllegalAccessException | ObjectNotFoundException e) {
+      return Response.status(Status.NOT_FOUND).build();
+    }
   }
 
 }
