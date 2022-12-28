@@ -22,7 +22,7 @@
   <parent>
     <artifactId>addons-parent-pom</artifactId>
     <groupId>org.exoplatform.addons</groupId>
-    <version>15</version>
+    <version>16-M06</version>
   </parent>
   <groupId>io.meeds.zapier-integration</groupId>
   <artifactId>zapier-integration-parent</artifactId>
