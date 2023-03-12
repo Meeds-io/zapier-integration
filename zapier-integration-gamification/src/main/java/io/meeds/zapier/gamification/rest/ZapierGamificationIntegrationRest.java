@@ -16,7 +16,6 @@
 package io.meeds.zapier.gamification.rest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -32,7 +31,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.exoplatform.addons.gamification.service.configuration.RuleService;
 import org.exoplatform.addons.gamification.service.dto.configuration.RuleDTO;
-import org.exoplatform.commons.exception.ObjectNotFoundException;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.resources.ResourceBundleService;
@@ -95,7 +93,7 @@ public class ZapierGamificationIntegrationRest implements ResourceContainer {
     List<RuleDTO> rules = ruleService.getActiveRules();
     List<GamificationRule> ruleEntities = rules.stream()
                                                .map(rule -> EntityBuilder.toGamificationRuleAction(resourceBundleService, rule))
-                                               .collect(Collectors.toList());
+                                               .toList();
     return Response.ok(ruleEntities).build();
   }
 
@@ -113,7 +111,7 @@ public class ZapierGamificationIntegrationRest implements ResourceContainer {
     try {
       List<GamificationAnnouncement> announcements = zapierIntegrationService.getAnnouncements(challengeId, offset, limit);
       return Response.ok(announcements).build();
-    } catch (IllegalAccessException | ObjectNotFoundException e) {
+    } catch (IllegalAccessException e) {
       return Response.status(Status.NOT_FOUND).build();
     }
   }

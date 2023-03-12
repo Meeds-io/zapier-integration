@@ -18,9 +18,9 @@ package io.meeds.zapier.gamification.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+
 import org.exoplatform.addons.gamification.listener.generic.GamificationGenericListener;
 import org.exoplatform.addons.gamification.service.AnnouncementService;
 import org.exoplatform.addons.gamification.service.dto.configuration.Announcement;
@@ -28,7 +28,6 @@ import org.exoplatform.commons.api.settings.SettingService;
 import org.exoplatform.commons.api.settings.SettingValue;
 import org.exoplatform.commons.api.settings.data.Context;
 import org.exoplatform.commons.api.settings.data.Scope;
-import org.exoplatform.commons.exception.ObjectNotFoundException;
 import org.exoplatform.services.listener.ListenerService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -93,9 +92,8 @@ public class ZapierIntegrationService {
     }
   }
 
-  public List<GamificationAnnouncement> getAnnouncements(long challengeId, int offset, int limit) throws IllegalAccessException,
-                                                                                                  ObjectNotFoundException {
-    List<Announcement> announcements = announcementService.findAllAnnouncementByChallenge(challengeId, offset, limit);
+  public List<GamificationAnnouncement> getAnnouncements(long challengeId, int offset, int limit) throws IllegalAccessException {
+    List<Announcement> announcements = announcementService.findAllAnnouncementByChallenge(challengeId, offset, limit, null, null);
     return announcements.stream().map(announcement -> {
       Identity identity = identityManager.getIdentity(String.valueOf(announcement.getAssignee()));
       UserIdentity userIdentity = new UserIdentity(identity.getId(),
@@ -107,7 +105,7 @@ public class ZapierIntegrationService {
                                           announcement.getChallengeTitle(),
                                           announcement.getComment(),
                                           userIdentity);
-    }).collect(Collectors.toList());
+    }).toList();
   }
 
   public void updateImOfUser(String username, String imType, String imUser) {
